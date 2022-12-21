@@ -3,9 +3,11 @@ try:
 except ImportError:
     pass
 
+
 import pandas as pd
 import numpy_financial as npf
 from datetime import date
+import json
 
 PAYMENTS_YEAR = 12
 
@@ -78,10 +80,11 @@ class MortgageCalculator:
 def get_mortgage_data(event, context):
     query_string_params = event.get("queryStringParameters")
 
-    interest = query_string_params.get("interest")
-    years = query_string_params.get("years")
-    mortgage = query_string_params.get("mortgage")
+    interest = float(query_string_params.get("interest"))
+    years = int(query_string_params.get("years"))
+    mortgage = float(query_string_params.get("mortgage"))
     start_date = query_string_params.get("start_date")
+    new_interest = float(query_string_params.get("new_interest"))
     print(f"EVENT IS: {event}")
     print(f"START DATE IS: {start_date}")
 
@@ -90,22 +93,21 @@ def get_mortgage_data(event, context):
     mc.calc_mortgage_params()
     mc.calc_payments()
 
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2022, 1, 1))
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2023, 1, 1))
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2024, 1, 1))
+    mc.prime_change(new_interest=new_interest, new_interest_period=date(2022, 1, 1))
+    mc.prime_change(new_interest=new_interest, new_interest_period=date(2023, 1, 1))
+    mc.prime_change(new_interest=new_interest, new_interest_period=date(2024, 1, 1))
     return {"statusCode": 200, "body": mc.mortgage_df.to_json()}
 
-
-if __name__ == '__main__':
-    mc = MortgageCalculator(interest=0.02, years=10, mortgage=600000, start_date=date(2021, 1, 1))
-    mc.calc_mortgage_params()
-    mc.calc_payments()
-
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2022, 1, 1))
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2023, 1, 1))
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2024, 1, 1))
-    print(f"Mortgage is: {mc.mortgage} and interest is: {mc.interest}")
-    # mc.add_inflation(inflation=0.05, inflation_date=date(2025, 1, 1))
-    # mc.add_inflation(inflation=0.05, inflation_date=date(2026, 1, 1))
-
-    print('a')
+# if __name__ == '__main__':
+#     mc = MortgageCalculator(interest=0.02, years=10, mortgage=600000, start_date=date(2021, 1, 1))
+#     mc.calc_mortgage_params()
+#     mc.calc_payments()
+#
+#     mc.prime_change(new_interest=.0075, new_interest_period=date(2022, 1, 1))
+#     mc.prime_change(new_interest=.0075, new_interest_period=date(2023, 1, 1))
+#     mc.prime_change(new_interest=.0075, new_interest_period=date(2024, 1, 1))
+#     print(f"Mortgage is: {mc.mortgage} and interest is: {mc.interest}")
+#     # mc.add_inflation(inflation=0.05, inflation_date=date(2025, 1, 1))
+#     # mc.add_inflation(inflation=0.05, inflation_date=date(2026, 1, 1))
+#
+#     print('a')
