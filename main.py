@@ -2,7 +2,7 @@ try:
     import unzip_requirements
 except ImportError:
     pass
-
+from datetime import datetime
 import pandas as pd
 import numpy_financial as npf
 from datetime import date
@@ -97,14 +97,16 @@ def get_mortgage_data(event, context):
 
 
 if __name__ == '__main__':
-    mc = MortgageCalculator(interest=0.02, years=10, mortgage=600000, start_date=date(2021, 1, 1))
-    mc.calc_mortgage_params()
-    mc.calc_payments()
+    get_mortgage_data({"queryStringParameters":{"interest": 0.05, 'years': 20, 'mortgage': 300000,
+                                                'start_date': datetime(2022, 2, 2)}}, None)
+   # mc = MortgageCalculator(interest=0.02, years=10, mortgage=600000, start_date=date(2021, 1, 1))
+   # mc.calc_mortgage_params()
+   # mc.calc_payments()
 
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2022, 1, 1))
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2023, 1, 1))
-    mc.prime_change(new_interest=.0075, new_interest_period=date(2024, 1, 1))
-    print(f"Mortgage is: {mc.mortgage} and interest is: {mc.interest}")
+    #mc.prime_change(new_interest=.0075, new_interest_period=date(2022, 1, 1))
+    #mc.prime_change(new_interest=.0075, new_interest_period=date(2023, 1, 1))
+    #mc.prime_change(new_interest=.0075, new_interest_period=date(2024, 1, 1))
+   # print(f"Mortgage is: {mc.mortgage} and interest is: {mc.interest}")
     # mc.add_inflation(inflation=0.05, inflation_date=date(2025, 1, 1))
     # mc.add_inflation(inflation=0.05, inflation_date=date(2026, 1, 1))
 
