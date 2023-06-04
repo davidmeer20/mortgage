@@ -2,7 +2,7 @@
 import tornado.ioloop
 import tornado.web
 import json
-
+from main import MortgageCalculator
 # Define the request handlers
 
 class MainHandler(tornado.web.RequestHandler):
@@ -11,6 +11,7 @@ class MainHandler(tornado.web.RequestHandler):
 
     def post(self):
         data = json.loads(self.request.body)
+        MortgageCalculator()
         self.write(data)
 
     def put(self):
